@@ -1,0 +1,52 @@
+# note: YAML definitions for multiple components/resources can be bundled together into one YAML file
+# '---' is used to separate the definitions of the components/resources
+
+# define a service for the mongodb server
+apiVersion: v1
+kind: Service
+metadata:
+  name: mongodb-service
+spec:
+  selector:
+    app: mongodb
+  ports:
+    - protocol: TCP
+      port: 27017
+      targetPort: 27017
+---
+# define a service for mongo-express
+# set the type to LoadBalancer and configure the ports
+# don't forget to specify a nodePort as well! a nodePort exposes the pod to applications outside the cluster. this will allow you to access the frontend admin interface from your host system
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: mongo-express
+spec:
+  selector:
+    app: mongo-express
+  type: LoadBalancer
+  ports:
+    - protocol: TCP
+      port: 8081
+      targetPort: 8081
+      nodePort: 30001
+---
+# define a `Service` for flask-app
+# set the type to LoadBalancer and configure the ports
+# don't forget to specify a nodePort as well! a nodePort exposes the pod to applications outside the cluster. this will allow you to access the frontend admin interface from your host system
+apiVersion: v1
+kind: Service
+metadata:
+  name: flaskapi
+spec:
+  ports:
+  - port: 5001
+    protocol: TCP
+    targetPort: 5001
+  selector:
+    app: flaskapi
+  type: LoadBalancer
+
+# contain permanent ip address that can be attached for each pod
+# Also act as load balancer

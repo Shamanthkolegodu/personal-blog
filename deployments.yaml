@@ -1,0 +1,102 @@
+---
+# define the `Deployment` for the mongodb server
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mongodb
+  labels:
+    app: mongodb
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mongodb
+  template:
+    metadata:
+      labels:
+        app: mongodb
+    spec:
+      containers:
+        - name: mongodb
+          image: mongo
+          imagePullPolicy: Never 
+          ports:
+            - containerPort: 27017
+          env:
+            - name: MONGO_INITDB_ROOT_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: mongodb-secret
+                  key: mongo-root-username
+            - name: MONGO_INITDB_ROOT_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: mongodb-secret
+                  key: mongo-root-password
+
+---
+# define the `Deployment` for mongo-express
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mongo-express
+  labels:
+    app: mongo-express
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mongo-express
+  template:
+    metadata:
+      labels:
+        app: mongo-express
+    spec:
+      containers:
+        - name: mongo-express
+          image: mongo-express
+          ports:
+            - containerPort: 8081
+          env:
+            - name: ME_CONFIG_MONGODB_ADMINUSERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: mongodb-secret
+                  key: mongo-root-username
+            - name: ME_CONFIG_MONGODB_ADMINPASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: mongodb-secret
+                  key: mongo-root-password
+            - name: ME_CONFIG_MONGODB_SERVER
+              valueFrom:
+                configMapKeyRef:
+                  name: mongodb-configmap
+                  key: database_url
+---
+# define the `Deployment` for flask-app
+# set ImagePullPolicy to 'Never' to allow the use of the locally built image
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: flaskapi
+  labels:
+    app: flaskapi
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: flaskapi
+  template:
+    metadata:
+      labels:
+        app: flaskapi
+    spec:
+      containers:
+        - name: flaskapi
+          image: shamanthkolegodu/flaskapi
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 5001
+# abstraction of pods
+# used to replicate
