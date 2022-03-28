@@ -16,12 +16,16 @@ spec:
       labels:
         app: mongodb
     spec:
+      terminationGracePeriodSeconds: 10
       containers:
         - name: mongodb
           image: mongo
-          imagePullPolicy: Never 
+          imagePullPolicy: Always 
           ports:
             - containerPort: 27017
+          volumeMounts:
+            - name: mongo-pv-storage
+              mountPath: /data/db
           env:
             - name: MONGO_INITDB_ROOT_USERNAME
               valueFrom:
@@ -33,6 +37,11 @@ spec:
                 secretKeyRef:
                   name: mongodb-secret
                   key: mongo-root-password
+      volumes:
+        - name: mongo-pv-storage
+          persistentVolumeClaim:
+            claimName: mongo-pv-claim
+
 
 ---
 # define the `Deployment` for mongo-express
@@ -94,8 +103,8 @@ spec:
     spec:
       containers:
         - name: flaskapi
-          image: shamanthkolegodu/flaskapi
-          imagePullPolicy: Never
+          image: shamanthkolegodu/flaskapiwithvolume
+          imagePullPolicy: Always
           ports:
             - containerPort: 5001
 # abstraction of pods

@@ -99,6 +99,9 @@ Feel free to play around for brownie points!
 ### Staring the app
 ```minikube tunnel```
 
+### To check pods
+```kubectl define <pod name>```
+
 ### App can be accessed in 
 * flaskapp frontend : ```http://localhost:5001```
 * mongo-express : ```http://localhost:8081```
