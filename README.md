@@ -74,9 +74,6 @@ Login to the mongo shell and -
 2. Insert a Collection
 3. Fill it with records
 
-Feel free to play around for brownie points!
-
-
 ---
 
 ## Commands to run app
@@ -110,3 +107,5 @@ Feel free to play around for brownie points!
 ### Debugging commands
 ```kubectl describe <pod name>```
 * pod name can be acessed by ```kubectl get all``` command
+
+#### Part of Cloud Computing coarse @PES University
