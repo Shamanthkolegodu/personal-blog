@@ -108,4 +108,4 @@ Login to the mongo shell and -
 ```kubectl describe <pod name>```
 * pod name can be acessed by ```kubectl get all``` command
 
-#### Part of Cloud Computing coarse @PES University
+#### Part of Cloud Computing course @PES University
